@@ -1,0 +1,9 @@
+openai==0.28.0
+flask
+flask-cors
+python-dotenv
+requests
+speechrecognition
+pyaudio
+gunicorn
+waitress
