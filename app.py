@@ -20,7 +20,7 @@ CORS(app)
 # Route to test if the app is running
 @app.route("/")
 def index():
-    return "App is running!"
+    return "App is running!"  # This is just to check if the app is running
 
 # Route to analyze arguments
 @app.route("/analyze", methods=["POST"])
