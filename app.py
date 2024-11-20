@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
+from waitress import serve  # Make sure Waitress is used for production
 
 # Load environment variables from .env file
 load_dotenv()
@@ -20,7 +21,7 @@ CORS(app)
 # Route to test if the app is running
 @app.route("/")
 def index():
-    return "App is running!"  # This is just to check if the app is running
+    return "App is running!"
 
 # Route to analyze arguments
 @app.route("/analyze", methods=["POST"])
@@ -48,6 +49,6 @@ def analyze_argument():
         print(f"Error: {e}")  # Print the detailed error message to the terminal
         return jsonify({"error": str(e)}), 500
 
-# Run the app on the specified host and port
+# Ensure the app runs using Waitress in production
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=80)
