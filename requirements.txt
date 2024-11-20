@@ -4,6 +4,5 @@ flask-cors
 python-dotenv
 requests
 speechrecognition
-pyaudio
 gunicorn
 waitress
