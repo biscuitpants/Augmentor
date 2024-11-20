@@ -1,6 +1,7 @@
 name: Deploy to Azure Web App
 
 on:
+  workflow_dispatch:  # This allows you to trigger the workflow manually
   push:
     branches:
       - main
@@ -8,14 +9,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: '3.11'
 
       - name: Install dependencies
         run: |
@@ -23,7 +25,8 @@ jobs:
           pip install -r requirements.txt
 
       - name: Deploy to Azure Web App
-        uses: Azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v2
         with:
-          app-name: 'augmentor-app'  # Your Azure App Service name
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          app-name: augmentor-app  # Replace with your Azure Web App name
+          publish-profile: ${{ secrets.AZURE_WEB_APP_PUBLISH_PROFILE }}  # Replace with your publish profile secret
+          package: ./
