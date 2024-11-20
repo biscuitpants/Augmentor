@@ -4,7 +4,7 @@ from flask_cors import CORS
 import os
 from dotenv import load_dotenv
 
-# Load environment variables
+# Load environment variables from .env file
 load_dotenv()
 
 # Set OpenAI API Key and Endpoint
@@ -17,28 +17,12 @@ openai.api_version = "2024-08-01-preview"
 app = Flask(__name__)
 CORS(app)
 
-def rate_argument(feedback):
-    """Rate the argument on a scale of 1-10 with 0.5 increments."""
-    score = 5  # Default score, assuming average quality
-    
-    # Check for various feedback keywords to rate the argument
-    if "logically sound" in feedback or "well-reasoned" in feedback:
-        score = 9.5  # Excellent argument
-    elif "valid" in feedback and "supported" in feedback:
-        score = 8  # Strong argument with evidence
-    elif "weak" in feedback or "flawed" in feedback:
-        score = 4  # Argument has flaws
-    elif "invalid" in feedback or "illogical" in feedback:
-        score = 2  # Argument is weak or invalid
-    
-    # Round to nearest 0.5
-    rounded_score = round(score * 2) / 2
+# Route to test if the app is running
+@app.route("/")
+def index():
+    return "App is running!"
 
-    # Print the rating for visibility in the console
-    print(f"Rating for argument: {rounded_score}")
-    
-    return rounded_score
-
+# Route to analyze arguments
 @app.route("/analyze", methods=["POST"])
 def analyze_argument():
     try:
@@ -58,15 +42,12 @@ def analyze_argument():
         )
 
         feedback = response.choices[0].text.strip()
-        rating = rate_argument(feedback)  # Get the rating based on the feedback
-
-        return jsonify({"feedback": feedback, "rating": rating})
+        return jsonify({"feedback": feedback})
 
     except Exception as e:
         print(f"Error: {e}")  # Print the detailed error message to the terminal
         return jsonify({"error": str(e)}), 500
 
-from waitress import serve
-
+# Run the app on the specified host and port
 if __name__ == "__main__":
-    serve(app, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=5000)
